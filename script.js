@@ -1,92 +1,94 @@
-const expression = {
-  operantA: undefined,
-  operator: undefined,
-  operantB: undefined,
-}
+const calculator = {
+  operantA: "",
+  operator: "",
+  operantB: "",
+  
+  appendNumber(number) {
+    if (number == "." && currentInput.value.includes(".")) return;
+    currentInput.value = currentInput.value + number; //posible update display
+  },
 
-function inputNumber(e) {//DONE for now, later do the comman and only one decimal place
-  const number = e.target.innerText;
-  currentInputValue = document.getElementById("input").value;
-  document.getElementById("input").value = currentInputValue + number;
-}
+  updateDisplay() {
+    previousInput.innerText = calculator.operantA;
+    currentInput.value = calculator.operantB
+  },
 
-function clear1() {
-  document.getElementById("input").value = "";
-
-}
-
-function clear() {
-  document.getElementById("input").value = "";
-  document.querySelector(".a").innerText= "";
-  expression.operantA = undefined;
-  expression.operantB = undefined;
-  expression.operator = undefined;
-}
-
-function equal() {
-  document.querySelector(".a").innerText= "";
-  const equalValue = operate();
-  document.getElementById("input").value = equalValue;
-  expression.operantA = undefined;
-  expression.operantB = undefined;
-  expression.operator = undefined;
-}
-
-function operate() {
-  expression.operantB = document.getElementById("input").value;
-  switch(expression.operator) {
-  case "+":
-    return Number(expression.operantA) + Number(expression.operantB);
-  case "-":
-    return Number(expression.operantA) - Number(expression.operantB);
-  case "*":
-    return Number(expression.operantA) * Number(expression.operantB);
-  case "÷":
-    return Number(expression.operantA) / Number(expression.operantB);
- }
-}
-
-function initializeOperantA(e) {
-  // console.log(e);
-  if (expression.operantA !== undefined || expression.operator !== undefined) {
-    console.log('hi')
-    const value = operate();
-    document.querySelector(".a").innerText= value;
-    expression.operantA = value;
-    console.log(e.target.innerText)
-    expression.operator = e.target.innerText;
-    expression.operantB = undefined;
-    clear1();
-  }
-  else {
-  console.log('ji');
-  expression.operantA = document.getElementById("input").value;
-  expression.operator = e.target.innerText;
-  var el = document.querySelector(".a");
-  el.innerText = expression.operantA
-  clear1();
+  initializeExpression(operand) {
+    if (currentInput.value == "") return;
+    if (calculator.operator !== "") {
+      const comptutedExpression = calculator.operate();
+      calculator.operantA = comptutedExpression;
+      calculator.operator = operand;
+      calculator.operantB = "";
     }
+    else {
+    calculator.operantA = currentInput.value;
+    calculator.operator = operand;
+    }
+    calculator.updateDisplay()
+  },
+
+  delete() {
+    currentInput.value = currentInput.value.slice(0, -1);
+  },
+
+  allClear() {
+    calculator.operantA = "";
+    calculator.operantB = "";
+    calculator.operator = "";
+    calculator.updateDisplay()
+  },
+
+  equals() {
+    if (calculator.operantA === "" || calculator.operantA === "") return
+    const comptutedExpression = calculator.operate();
+    calculator.allClear();
+    currentInput.value = comptutedExpression;
+  },
+  plusMinus() {
+    if (currentInput.value.includes("-")) {
+      currentInput.value = currentInput.value.slice(1, currentInput.value.lenght);;
+    }
+    else {
+      currentInput.value = "-" + currentInput.value;
+    }
+  },
+
+  operate() {
+    calculator.operantB = currentInput.value;
+    switch(calculator.operator) {
+    case "+":
+      return (Number(calculator.operantA) + Number(calculator.operantB));
+    case "-":
+      return Number(calculator.operantA) - Number(calculator.operantB);
+    case "*":
+      return Number(calculator.operantA) * Number(calculator.operantB);
+    case "÷":
+      return Number(calculator.operantA) / Number(calculator.operantB);
+   }
+  },
 }
 
-let button = document.querySelectorAll("[data-operation]");
-button.forEach(element => {
-  element.addEventListener('click', initializeOperantA)
+const operationButtons = document.querySelectorAll("[data-operation]");
+const numberButtons = document.querySelectorAll("[data-number]");
+const operateButton = document.querySelector("[data-operate]");
+const allClearButton = document.querySelector("[data-all-clear]");
+const deleteButton = document.querySelector("[data-delete]");
+const currentInput = document.getElementById("current-input");
+const previousInput = document.querySelector(".previous-input")
+const plusMinus = document.querySelector("[data-plus-minus]")
+
+numberButtons.forEach(button => {
+  button.addEventListener('click', () => {
+    calculator.appendNumber(button.innerText)
+  })
 });
-
-let numbers = document.querySelectorAll("[data-number]");
-numbers.forEach(element => {
-  element.addEventListener('click', inputNumber)
+operationButtons.forEach(button => {
+  button.addEventListener('click', () => {
+    calculator.initializeExpression(button.innerText)
+  })
 });
-
-let operateButton = document.querySelectorAll("[data-operate]");
-operateButton.forEach(element => {
-  element.addEventListener('click', equal)
-});
-
-let allClear = document.querySelectorAll("[data-all-clear]");
-allClear.forEach(element => {
-  element.addEventListener('click', clear);
-});
-
-
-
+operateButton.addEventListener('click', calculator.equals);
+allClearButton.addEventListener('click', calculator.allClear);
+deleteButton.addEventListener('click', calculator.delete);
+plusMinus.addEventListener('click', calculator.plusMinus);

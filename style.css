@@ -9,6 +9,7 @@ body {
   background: -webkit-linear-gradient(to right, #aa4b6b, #6b6b83, #3b8d99); /* Chrome 10-25, Safari 5.1-6 */
   background: linear-gradient(to right, #aa4b6b, #6b6b83, #3b8d99);
 }
+
 .container {
   display: grid;
   justify-content: center;
@@ -17,21 +18,35 @@ body {
   grid-template-columns: repeat(4, 100px);
   grid-template-rows: minmax(120px, auto) repeat(5, 100px);
 }
-.container > button {
+button {
   cursor: pointer;
   font-size: 2rem;
   border: 1px solid white;
   outline: none;
-  background-color: rgba(255, 255, 255, .75);
+  background-color: rgba(255, 255, 255, 0.719);
 }
 
-.container > button:hover {
+button:hover {
   background-color: rgba(255, 255, 255, .9);
+}
+
+[data-all-clear], [data-delete], [data-plus-minus] {
+  background: #9e9ea0;
+}
+[data-all-clear]:hover, [data-delete]:hover, [data-plus-minus]:hover {
+  background: #c5c5c6;
+}
+[data-operation], [data-operate] {
+  background: #4285f4;
+}
+
+[data-operation]:hover, [data-operate]:hover {
+  background: #b3cefa;
 }
 
 .output {
   grid-column: 1 / -1;
-  background-color: rgba(66, 57, 57, 0.75);
+  background-color: rgba(0, 0, 0, 0.72);
   display: flex;
   align-items: flex-end;
   justify-content: space-around;
@@ -40,7 +55,7 @@ body {
   word-wrap: break-word;
   word-break: break-all;
 }
-#input {
+#current-input {
   color: white;
   text-align: right; 
   min-width: 100%;
@@ -49,7 +64,7 @@ body {
   padding: 0;
   background-color:transparent;
 }
-.a {
+.previous-input {
   color: white;
   font-size: 1.5rem;
 }
